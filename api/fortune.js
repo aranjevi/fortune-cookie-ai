@@ -1,11 +1,15 @@
 import fetch from 'node-fetch';
 
-// Set your OpenAI API Key (You should securely store this in environment variables)
+// Get OpenAI API Key from environment variables
 const openaiApiKey = process.env.OPENAI_API_KEY;
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { name, zodiac } = req.body;
+
+        if (!name || !zodiac) {
+            return res.status(400).json({ message: 'Name and zodiac are required.' });
+        }
 
         try {
             // Call OpenAI API to generate a fortune message
@@ -24,8 +28,16 @@ export default async function handler(req, res) {
             });
 
             const data = await openaiResponse.json();
+            
+            // Check for errors in the OpenAI response
+            if (data.error) {
+                console.error('OpenAI API Error:', data.error);
+                return res.status(500).json({ message: 'Failed to generate fortune message from OpenAI.' });
+            }
+
             const fortuneMessage = data.choices[0].text.trim();
 
+            // Return the generated fortune message
             res.status(200).json({ message: `${name}, your fortune is: ${fortuneMessage}` });
 
         } catch (error) {
