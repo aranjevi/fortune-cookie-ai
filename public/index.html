@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Cookie AI</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Fortune Cookie AI!</h1>
+        <p>Enter your name and zodiac sign to get your personalized fortune.</p>
+
+        <form id="fortuneForm">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="zodiac">Your Zodiac Sign:</label>
+            <select id="zodiac" name="zodiac" required>
+                <option value="Aries">Aries</option>
+                <option value="Taurus">Taurus</option>
+                <option value="Gemini">Gemini</option>
+                <option value="Cancer">Cancer</option>
+                <option value="Leo">Leo</option>
+                <option value="Virgo">Virgo</option>
+                <option value="Libra">Libra</option>
+                <option value="Scorpio">Scorpio</option>
+                <option value="Sagittarius">Sagittarius</option>
+                <option value="Capricorn">Capricorn</option>
+                <option value="Aquarius">Aquarius</option>
+                <option value="Pisces">Pisces</option>
+            </select>
+
+            <button type="button" id="getFortune">Get My Fortune</button>
+        </form>
+
+        <div id="fortuneMessage"></div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
