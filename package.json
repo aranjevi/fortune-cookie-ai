@@ -1,0 +1,17 @@
+{
+  "name": "fortune-cookie-ai",
+  "version": "1.0.0",
+  "description": "A web app that gives random motivational fortune messages",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {}
+}
