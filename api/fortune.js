@@ -1,64 +1,38 @@
-export default function handler(req, res) {
+import fetch from 'node-fetch';
+
+// Set your OpenAI API Key (You should securely store this in environment variables)
+const openaiApiKey = process.env.OPENAI_API_KEY;
+
+export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { name, zodiac } = req.body;
 
-        const fortunes = {
-            Aries: [
-                "Today is your day to shine!",
-                "Take bold steps forward and conquer the day."
-            ],
-            Taurus: [
-                "Patience will bring great rewards.",
-                "Believe in your strength and resilience."
-            ],
-            Gemini: [
-                "Your curiosity will lead to amazing discoveries.",
-                "Stay positive, the best is yet to come."
-            ],
-            Cancer: [
-                "Trust your instincts; they will guide you.",
-                "Your kindness will bring you success."
-            ],
-            Leo: [
-                "Embrace your power, the world is yours.",
-                "Be bold and ambitious today!"
-            ],
-            Virgo: [
-                "Perfection is within your reach. Keep going!",
-                "Your hard work will pay off soon."
-            ],
-            Libra: [
-                "Balance is key, stay calm and focused.",
-                "Great things are coming your way."
-            ],
-            Scorpio: [
-                "Your strength lies in your determination.",
-                "Embrace change, it’s leading to something wonderful."
-            ],
-            Sagittarius: [
-                "Adventure awaits, take that leap of faith!",
-                "Keep exploring, the journey is just as important."
-            ],
-            Capricorn: [
-                "Your persistence will bring incredible rewards.",
-                "Don’t stop now, success is around the corner."
-            ],
-            Aquarius: [
-                "Your creativity will inspire those around you.",
-                "The future is yours to shape."
-            ],
-            Pisces: [
-                "Trust in your dreams, they are guiding you.",
-                "Let your intuition lead the way."
-            ]
-        };
+        try {
+            // Call OpenAI API to generate a fortune message
+            const openaiResponse = await fetch('https://api.openai.com/v1/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${openaiApiKey}`,
+                },
+                body: JSON.stringify({
+                    model: "text-davinci-003", // Use the latest available GPT model
+                    prompt: `Generate a motivational fortune for someone named ${name}, born under the zodiac sign of ${zodiac}. The fortune should be positive, encouraging, and motivational.`,
+                    max_tokens: 100, // Limit to 100 tokens for brevity
+                    temperature: 0.7, // Adjust for creativity
+                }),
+            });
 
-        const randomFortune = fortunes[zodiac]
-            ? fortunes[zodiac][Math.floor(Math.random() * fortunes[zodiac].length)]
-            : "You have the strength to overcome any challenge ahead.";
+            const data = await openaiResponse.json();
+            const fortuneMessage = data.choices[0].text.trim();
 
-        res.status(200).json({ message: `${name}, your fortune is: ${randomFortune}` });
+            res.status(200).json({ message: `${name}, your fortune is: ${fortuneMessage}` });
+
+        } catch (error) {
+            console.error('Error generating fortune:', error);
+            res.status(500).json({ message: 'Sorry, something went wrong. Please try again.' });
+        }
     } else {
-        res.status(405).json({ message: "Method Not Allowed" });
+        res.status(405).json({ message: 'Method Not Allowed' });
     }
 }
